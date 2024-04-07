@@ -1,0 +1,28 @@
+name: deploy-container
+
+on: # what event are we listening for
+    push: 
+        branches:
+            - master #whenerver we push to this branch
+        paths:
+            - 'packages/container/**'  #only run workflow when chages to container project
+
+defaults:
+    run:
+        working-directory: packages/container #execution environment is set to inside container dirctory
+                                                # ie run npm install in container directory
+                            
+jobs:
+    build:
+        runs-on: ubuntu-latest # this is a virtual machine on github
+        
+        steps: # need to load code into the virtual machine
+            - uses: actions/checkout@v2
+            - run: npm install
+            - run: npm run build
+
+            - uses: shinyinc/action-aws-cli@v1.2 #gives us access to Aws cli
+            - run: aws s3 sync dist s3://${{secrets.AWS_S3_BUCKET_NAME}}/container/latest
+              env: 
+                AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+                AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
