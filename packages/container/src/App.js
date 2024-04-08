@@ -11,7 +11,8 @@ import React from 'react';
 
 import MarketingApp from './components/MarketingApp';
 import Header from './components/Header';
-import { BrowserRouter } from 'react-router-dom';
+import { BrowserRouter } from 'react-router-dom'; //browserrouter creates copy of browser history (url)
+                                                    //child apps just use Router (memory history)
 import {StylesProvider, createGenerateClassName} from '@material-ui/core/styles'
 
 const generateClassName = createGenerateClassName({
