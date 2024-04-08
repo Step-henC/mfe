@@ -11,7 +11,9 @@ const domain = process.env.PRODUCTION_DOMAIN; //this wil be an env variable we s
 const prodConfig = {
     mode: 'production', //minify js files, takes longer, but optimized
     output: {
-        filename: '[name].[contenthash].js' //done for caching issues, fix output files to have filename then hash of content in file
+        filename: '[name].[contenthash].js', //done for caching issues, fix output files to have filename then hash of content in file
+        publicPath: '/container/latest/' //used to refer to file built by webpack. This gets htmlPlugin to add in path as well.
+                                    //cloudfront is looking for main.js file in root directory of s3 bucket. But S3 bucket shows our main.js is in /container/latest/
     },
     plugins: [
         new ModuleFederationPlugin({
