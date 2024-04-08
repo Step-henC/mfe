@@ -7,7 +7,7 @@ const prodConfig = {
     mode: 'production', //minify js files, takes longer, but optimized
     output: {
         filename: '[name].[contenthash].js', //done for caching issues, fix output files to have filename then hash of content in file
-        publicPath: '/marketing/latest' //tell modulefederation to prepend dir so remoteEntry pointing to correct location in s3
+        publicPath: '/marketing/latest/' //tell modulefederation to prepend dir so remoteEntry pointing to correct location in s3
     },
     plugins: [
         new ModuleFederationPlugin({
