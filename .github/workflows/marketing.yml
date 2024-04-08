@@ -1,16 +1,15 @@
-name: deploy-container
+name: deploy-marketing
 
 on: # what event are we listening for
     push: 
         branches:
             - master #whenerver we push to this branch
         paths:
-            - 'packages/container/**'  #only run workflow when chages to container project
+            - 'packages/marketing/**' 
 
 defaults:
     run:
-        working-directory: packages/container #execution environment is set to inside container dirctory
-                                                # ie run npm install in container directory
+        working-directory: packages/marketing #execution environment is set to inside marketing dirctory
                             
 jobs:
     build:
@@ -20,16 +19,14 @@ jobs:
             - uses: actions/checkout@v2
             - run: npm install
             - run: npm run build
-              env:  #see webpack.prod for container. 
-                PRODUCTION_DOMAIN: ${{secrets.PRODUCTION_DOMAIN}} #when we run build we want the cloudfront domain with "https://" attached
 
             - uses: shinyinc/action-aws-cli@v1.2 #gives us access to Aws cli
-            - run: aws s3 sync dist s3://${{secrets.AWS_S3_BUCKET_NAME}}/container/latest #sync dist (webpack build output) to s3
+            - run: aws s3 sync dist s3://${{secrets.AWS_S3_BUCKET_NAME}}/marketing/latest #sync dist (webpack build output) to s3
               env: 
                 AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
                 AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
                 AWS_DEFAULT_REGION: us-east-1       
-            - run: aws cloudfront create-invalidation --distribution-id ${{secrets.AWS_DISTRIBUTION_ID}} --paths "/container/latest/index.html" # create cache invalidation for index.html automaticall regardless of hash change
+            - run: aws cloudfront create-invalidation --distribution-id ${{secrets.AWS_DISTRIBUTION_ID}} --paths "/marketing/latest/remoteEntry.js" # create cache invalidation for index.html automaticall regardless of hash change
               env: 
                 AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}} # need secrets for this command
                 AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}} #technically can put secrets higher on yml so that we do not post twice, but other steps like npm install will have our secrets which we do not want

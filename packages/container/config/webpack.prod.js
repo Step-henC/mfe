@@ -7,6 +7,7 @@ const domain = process.env.PRODUCTION_DOMAIN; //this wil be an env variable we s
                                         // its a string that tells us our domain in cloud
                                         //we do not know yet unitl it is in AWS
                                         //need it for the 'remotes' property
+                                        //took cloudfront domain and added to github secrets with https:// added
 
 const prodConfig = {
     mode: 'production', //minify js files, takes longer, but optimized
@@ -20,7 +21,7 @@ const prodConfig = {
         new ModuleFederationPlugin({
             name: 'container', //do not need nake for this host module but good practice
             remotes: {
-                marketing: `marketing@${domain}/marketing/remoteEntry.js` //assuming remote entry file is set in subfolder of doamin on cloud called "marketing"
+                marketing: `marketing@${domain}/marketing/latest/remoteEntry.js` //assuming remote entry file is set in subfolder of doamin on cloud called "marketing"
             },
             shared: packageJson.dependencies,
 
