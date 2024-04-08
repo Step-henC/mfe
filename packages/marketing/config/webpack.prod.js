@@ -16,7 +16,10 @@ const prodConfig = {
             exposes: {
                 './MarketingApp': './src/bootstrap'
             },
-            shared: packageJson.dependencies,
+            shared: packageJson.dependencies, //all dependencies are output into separate js files seen in browser
+                                                //for http/2 its actually advantageous to have multiple small files instead of 
+                                                        //loading up bigger js files. You can remove to reduce js files in browser
+                                                        //but would have to load it multiple times
 
         })
     ]

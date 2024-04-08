@@ -1,5 +1,6 @@
 import React from 'react';
 
+
 //do not need mount, we refactored to marketingApp component
 //import {mount} from 'marketing/MarketingApp'; //from marketing webpackfederation plugin
 //mount is not react component so we cannot display it
@@ -9,7 +10,19 @@ import React from 'react';
 
 
 import MarketingApp from './components/MarketingApp';
+import Header from './components/Header';
+import { BrowserRouter } from 'react-router-dom';
 
 export default () => {
-    return <div><h1>Hi There! What's Up?</h1><hr/><MarketingApp /></div>
+    return (
+    <BrowserRouter>
+    <div>
+        <Header/>
+    <MarketingApp />
+
+    </div>
+    </BrowserRouter>
+
+
+)
 }
