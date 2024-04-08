@@ -14,6 +14,7 @@ const prodConfig = {
         filename: '[name].[contenthash].js', //done for caching issues, fix output files to have filename then hash of content in file
         publicPath: '/container/latest/' //used to refer to file built by webpack. This gets htmlPlugin to add in path as well.
                                     //cloudfront is looking for main.js file in root directory of s3 bucket. But S3 bucket shows our main.js is in /container/latest/
+                                    //we manually invalidated cloudfront caching of index.html since name of file does not change, it keeps it cached
     },
     plugins: [
         new ModuleFederationPlugin({

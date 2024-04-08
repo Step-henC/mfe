@@ -26,4 +26,9 @@ jobs:
               env: 
                 AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
                 AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
-                AWS_DEFAULT_REGION: us-east-1
+                AWS_DEFAULT_REGION: us-east-1       
+            - run: aws cloudfront create-invalidation --distribution-id ${{secrets.AWS_DISTRIBUTION_ID}} --paths "/container/latest/index.html" # create cache invalidation for index.html automaticall regardless of hash change
+              env: 
+                AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}} # need secrets for this command
+                AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}} #technically can put secrets higher on yml so that we do not post twice, but other steps like npm install will have our secrets which we do not want
+                AWS_DEFAULT_REGION: us-east-1 #shinyinc aws cli requires region too
