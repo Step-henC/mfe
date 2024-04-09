@@ -21,7 +21,9 @@ const prodConfig = {
         new ModuleFederationPlugin({
             name: 'container', //do not need nake for this host module but good practice
             remotes: {
-                marketing: `marketing@${domain}/marketing/latest/remoteEntry.js` //assuming remote entry file is set in subfolder of doamin on cloud called "marketing"
+                marketing: `marketing@${domain}/marketing/latest/remoteEntry.js`, //assuming remote entry file is set in subfolder of doamin on cloud called "marketing"
+                auth: `auth@${domain}/marketing/latest/remoteEntry.js`
+
             },
             shared: packageJson.dependencies,
 
