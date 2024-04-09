@@ -22,7 +22,7 @@ const prodConfig = {
             name: 'container', //do not need nake for this host module but good practice
             remotes: {
                 marketing: `marketing@${domain}/marketing/latest/remoteEntry.js`, //assuming remote entry file is set in subfolder of doamin on cloud called "marketing"
-                auth: `auth@${domain}/marketing/latest/remoteEntry.js`
+                auth: `auth@${domain}/auth/latest/remoteEntry.js`
 
             },
             shared: packageJson.dependencies,
