@@ -1,0 +1,33 @@
+name: deploy-auth
+
+on: # what event are we listening for
+    push: 
+        branches:
+            - master #whenerver we push to this branch
+        paths:
+            - 'packages/auth/**' 
+
+defaults:
+    run:
+        working-directory: packages/auth #execution environment is set to inside marketing dirctory
+                            
+jobs:
+    build:
+        runs-on: ubuntu-latest # this is a virtual machine on github
+        
+        steps: # need to load code into the virtual machine
+            - uses: actions/checkout@v2
+            - run: npm install
+            - run: npm run build
+
+            - uses: shinyinc/action-aws-cli@v1.2 #gives us access to Aws cli
+            - run: aws s3 sync dist s3://${{secrets.AWS_S3_BUCKET_NAME}}/auth/latest #sync dist (webpack build output) to s3
+              env: 
+                AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}}
+                AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}}
+                AWS_DEFAULT_REGION: us-east-1       
+            - run: aws cloudfront create-invalidation --distribution-id ${{secrets.AWS_DISTRIBUTION_ID}} --paths "/auth/latest/remoteEntry.js" # create cache invalidation for remoteEntry
+              env: 
+                AWS_ACCESS_KEY_ID: ${{secrets.AWS_ACCESS_KEY_ID}} # need secrets for this command
+                AWS_SECRET_ACCESS_KEY: ${{secrets.AWS_SECRET_ACCESS_KEY}} #technically can put secrets higher on yml so that we do not post twice, but other steps like npm install will have our secrets which we do not want
+                AWS_DEFAULT_REGION: us-east-1 #shinyinc aws cli requires region too

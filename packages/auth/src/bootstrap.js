@@ -2,21 +2,20 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import App from './App'
 import {createMemoryHistory, createBrowserHistory} from 'history'
-const mount = (element, {onNavigate, defaultHistory, initialPath}) => { //object with key onNavigate
+const mount = (element, {onSignIn, onNavigate, defaultHistory, initialPath}) => { //object with key onNavigate
 
-    //we only get default history in development so devs can see URL on link clicks
-    //if given default history, use it, else use memory history 
-    const history = defaultHistory || createMemoryHistory({
-        initialEntries: [initialPath],
-    }); //use memory history not browser history for child MFEs for Router in Appjs
+   
+    const history = defaultHistory || createMemoryHistory({ //memory history thinks it starts at forward slash {home}
+        initialEntries: [initialPath]                       //to prevent having to click login button twice to update browser history and trigger event we need to set an initial state
+}); 
 
-    if (onNavigate){ //onNavigate not provided in local development
-        history.listen(onNavigate); //history object has an event listener tied to it called "listen", we need this for container and marketing to hear url changes
+    if (onNavigate){ 
+        history.listen(onNavigate); 
 
     }
 
     ReactDOM.render(
-        <App history={history}/>,
+        <App history={history} onSignIn={onSignIn}/>,
         element
     )
 
@@ -32,7 +31,7 @@ const mount = (element, {onNavigate, defaultHistory, initialPath}) => { //object
 }
 
 if (process.env.NODE_ENV === 'development'){
-    const devRoot = document.querySelector('#_marketing-dev-root');
+    const devRoot = document.querySelector('#_auth-dev-root');
 
     if (devRoot){
         mount(devRoot, {defaultHistory: createBrowserHistory()}); //use BrowserHistory for local development so devs can see url changes and change mount function

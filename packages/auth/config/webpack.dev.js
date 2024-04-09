@@ -9,19 +9,20 @@ const commonConfig = require('./webpack.common');
 
 const devConfig = {
     mode: 'development',
-    output: { 
-        publicPath: "http://localhost:8081/" //adding this from auth bug. Does this without publicPath by default but just in case
-    },
+    output: { //have to add public path for local dev because of nested url ".../auth/signup"
+        publicPath: "http://localhost:8082/" //marketing does not have to do this beacuse no nested url
+    }, //public path tells project to get files at domain where server is running to serve main.js files
+    // we will add this to other webpacks too just to avoid
     devServer: {
-        port: 8081,
+        port: 8082,
         historyApiFallback: true,
     },
     plugins: [
         new ModuleFederationPlugin({
-            name: 'marketing',
+            name: 'auth',
             filename: 'remoteEntry.js', //no need to change this standard name: remoteEntry
             exposes: {
-                './MarketingApp': './src/bootstrap' //whenever someone asks for (./) we put placeholder Marketing and reference the bootstrap folder we want to expose
+                './AuthApp': './src/bootstrap' //whenever someone asks for (./) 
             },
             //shared: ['react', 'react-dom'] //share react with container to prevent double loading of react
             shared: packageJson.dependencies //sharing dependencis save almost a MB of js but prod env js will be minified
